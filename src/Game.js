@@ -27,6 +27,10 @@ export class GameScene extends Phaser.Scene {
             frameWidth: 26,
             frameHeight: 36,
         });
+        this.load.spritesheet("crab", "../assets/crab/idle/Crab1.png", {
+            frameWidth: 18,
+            frameHeight: 18
+        });
     }
 
     create() {
@@ -52,7 +56,10 @@ export class GameScene extends Phaser.Scene {
         this.cameras.main.startFollow(playerSprite);
         this.cameras.main.setRoundPixels(true);
 
-        // const player = new Player(playerSprite, new Phaser.Math.Vector2(24));
+        // init crab
+        const crabSprite = this.add.sprite(0, 0, "crab");
+        crabSprite.setDepth(2);
+        crabSprite.setScale(1.5);
 
         // init gridEngine
         const gridEngineConfig = {
@@ -60,9 +67,16 @@ export class GameScene extends Phaser.Scene {
                 {
                     id: "player",
                     sprite: playerSprite,
-                    walkingAnimationMapping: 6,
+                    walkingAnimationMapping: 3,
                     startPosition: {
                         x: 24, y: 24
+                    }
+                },
+                {
+                    id: "crab",
+                    sprite: crabSprite,
+                    startPosition: {
+                        x: 12, y: 12
                     }
                 }
             ],
