@@ -31,6 +31,22 @@ export class GameScene extends Phaser.Scene {
             frameWidth: 18,
             frameHeight: 18
         });
+        this.load.spritesheet("acid", "../assets/monsters/acid.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        });
+        this.load.spritesheet("eyeball", "../assets/monsters/eyeball.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        });
+        this.load.spritesheet("grimlocke", "../assets/monsters/grimlocke.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        });
+        this.load.spritesheet("ogre", "../assets/monsters/ogre.png", {
+            frameWidth: 16,
+            frameHeight: 16
+        });
     }
 
     create() {
@@ -61,6 +77,26 @@ export class GameScene extends Phaser.Scene {
         crabSprite.setDepth(2);
         crabSprite.setScale(1.5);
 
+        // init acid
+        const acidSprite = this.add.sprite(0, 0, "acid");
+        acidSprite.setDepth(2);
+        acidSprite.setScale(1.5);
+
+        // init eyeball
+        const eyeballSprite = this.add.sprite(0, 0, "eyeball");
+        eyeballSprite.setDepth(2);
+        eyeballSprite.setScale(1.5);
+
+        // init grimlocke
+        const grimlockeSprite = this.add.sprite(0, 0, "grimlocke");
+        grimlockeSprite.setDepth(2);
+        grimlockeSprite.setScale(1.5);
+
+        // init ogre
+        const ogreSprite = this.add.sprite(0, 0, "ogre");
+        ogreSprite.setDepth(2);
+        ogreSprite.setScale(1.5);
+        
         // init gridEngine
         const gridEngineConfig = {
             characters: [
@@ -78,7 +114,39 @@ export class GameScene extends Phaser.Scene {
                     startPosition: {
                         x: 12, y: 12
                     }
-                }
+                },
+                {
+                    id: "acid",
+                    sprite: acidSprite,
+                    walkingAnimationMapping: 1,
+                    startPosition: {
+                        x: 20, y: 20
+                    }
+                },
+                {
+                    id: "eyeball",
+                    sprite: eyeballSprite,
+                    walkingAnimationMapping: 1,
+                    startPosition: {
+                        x: 30, y: 10
+                    }
+                },
+                {
+                    id: "grimlocke",
+                    sprite: grimlockeSprite,
+                    walkingAnimationMapping: 1,
+                    startPosition: {
+                        x: 10, y: 20
+                    }
+                },
+                {
+                    id: "ogre",
+                    sprite: ogreSprite,
+                    walkingAnimationMapping: 1,
+                    startPosition: {
+                        x: 20, y: 5
+                    }
+                },
             ],
             collisionTilePropertyName: "hasCollision",
         }
@@ -98,8 +166,8 @@ export class GameScene extends Phaser.Scene {
             this.gridEngine.move("player", "up");
         else if (keys.right.isDown)
             this.gridEngine.move("player", "right");
-        else if (keys.down.isDown)
-            this.gridEngine.move("player", "down")
+        else if (keys.down.isDown) 
+            this.gridEngine.move("player", "down");
     }
 }
 
