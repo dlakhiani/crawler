@@ -4,11 +4,8 @@ import { GridEngine } from "grid-engine";
 const sceneConfig = {
   active: false,
   visible: false,
-  key: "Game",
+  key: "GameScene",
 };
-
-const WIDTH = 840;
-const HEIGHT = 480;
 
 export const TILE_SIZE = 24;
 export const SCALE = 2;
@@ -19,6 +16,9 @@ export class GameScene extends Phaser.Scene {
   }
 
   preload() {
+    this.load.image("menu", "../assets/menu.png");
+    this.load.image("button", "../assets/button.png");
+
     this.load.image("tiles", "../assets/scene.png");
     this.load.tilemapTiledJSON("mainCity", "../assets/mainCity.json");
 
@@ -125,7 +125,7 @@ export class GameScene extends Phaser.Scene {
 
   makeAnim(key, frameName) {
     let npcArray = [];
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 5; i++) {
       let fn = frameName + i + ".png";
       npcArray.push({
         key: key,
@@ -143,30 +143,3 @@ export class GameScene extends Phaser.Scene {
     else if (keys.down.isDown) this.gridEngine.move("player", "down");
   }
 }
-
-export const gameConfig = {
-  title: "Sample",
-  render: {
-    antialias: false,
-  },
-  type: Phaser.AUTO,
-  scene: GameScene,
-  scale: {
-    width: WIDTH,
-    height: HEIGHT,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
-  },
-  physics: {
-    default: "arcade",
-  },
-  plugins: {
-    scene: [
-      {
-        key: "gridEngine",
-        plugin: GridEngine,
-        mapping: "gridEngine",
-      },
-    ],
-  },
-  parent: "game",
-};
