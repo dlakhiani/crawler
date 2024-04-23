@@ -58,6 +58,7 @@ export class GameScene extends Phaser.Scene {
         // init crab
         this.crab=this.add.sprite(200,300,'crab');
         this.crab.setDepth(2);
+        this.crab.setScale(SCALE);
          var frameNames = this.textures.get('crab').getFrameNames();;
  this.anims.create({
     key: 'idle',
@@ -82,6 +83,13 @@ this.crab.play("idle");
                     walkingAnimationMapping: 2,
                     startPosition: {
                         x: 24, y: 24
+                    }
+                },
+                {
+                    id: "crab",
+                    sprite: this.crab,
+                    startPosition: {
+                        x: 25, y: 12
                     }
                 },
             ],
