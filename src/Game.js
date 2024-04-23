@@ -27,9 +27,8 @@ export class GameScene extends Phaser.Scene {
             frameWidth: 26,
             frameHeight: 36,
         });
-        this.load.spritesheet("crab", "../assets/crab/idle/Crab1.png", {
-            frameWidth: 18,
-            frameHeight: 18
+        this.load.atlas("crab", "../assets/crab/idle/crabs.png", "../assets/crab/idle/crabs.json", {
+          
         });
     }
 
@@ -57,9 +56,22 @@ export class GameScene extends Phaser.Scene {
         this.cameras.main.setRoundPixels(true);
 
         // init crab
-        const crabSprite = this.add.sprite(0, 0, "crab");
-        crabSprite.setDepth(2);
-        crabSprite.setScale(1.5);
+        this.crab=this.add.sprite(200,300,'crab');
+        this.crab.setDepth(2);
+         var frameNames = this.textures.get('crab').getFrameNames();;
+ this.anims.create({
+    key: 'idle',
+    frames: [
+        { key: 'crab',frame:"Crab1.png" },
+        { key: 'crab',frame:"Crab2.png" },
+        { key: 'crab',frame:"Crab3.png" },
+        { key: 'crab',frame:"Crab4.png" },
+        { key: 'crab',frame:"Crab5.png" }
+    ],
+    frameRate: 8,
+    repeat: -1
+});
+this.crab.play("idle");
 
         // init gridEngine
         const gridEngineConfig = {
@@ -67,21 +79,15 @@ export class GameScene extends Phaser.Scene {
                 {
                     id: "player",
                     sprite: playerSprite,
-                    walkingAnimationMapping: 3,
+                    walkingAnimationMapping: 2,
                     startPosition: {
                         x: 24, y: 24
                     }
                 },
-                {
-                    id: "crab",
-                    sprite: crabSprite,
-                    startPosition: {
-                        x: 12, y: 12
-                    }
-                }
             ],
             collisionTilePropertyName: "hasCollision",
         }
+        
 
         this.gridEngine.create(
             mainCityTilemap,
