@@ -11,6 +11,8 @@ export const TILE_SIZE = 24;
 export const SCALE = 2;
 
 export class GameScene extends Phaser.Scene {
+  player;
+
   constructor() {
     super(sceneConfig);
   }
@@ -53,24 +55,28 @@ export class GameScene extends Phaser.Scene {
       layer.setScale(SCALE);
     }
 
+    // init dialogue
+    const dialogue = this.add.text(
+        150, 80, "move around", { 
+            fontSize: '32px', 
+            fill: '#000' 
+        }
+    )
+
     // init player
-    const playerSprite = this.add.sprite(0, 0, "player");
+    const playerSprite = this.physics.add.sprite(0, 0, "player");
     playerSprite.setDepth(2);
     playerSprite.setScale(SCALE);
+    this.player = playerSprite;
 
     // camera follows player
     this.cameras.main.startFollow(playerSprite);
     this.cameras.main.setRoundPixels(true);
 
     // init crab
-    this.crab = this.add.sprite(0, 0, "crab");
+    this.crab = this.physics.add.sprite(0, 0, "crab");
     this.crab.setDepth(2);
     this.crab.setScale(1.5);
-
-    // init ogre
-    this.ogre = this.add.sprite(0, 0, "ogre");
-    this.ogre.setDepth(2);
-    this.ogre.setScale(3);
 
     this.anims.create({
       key: "idleCrab",
@@ -78,14 +84,19 @@ export class GameScene extends Phaser.Scene {
       frameRate: 8,
       repeat: -1,
     });
+    this.crab.play("idleCrab");
+    
+    // init ogre
+    this.ogre = this.physics.add.sprite(0, 0, "ogre");
+    this.ogre.setDepth(2);
+    this.ogre.setScale(3);
+
     this.anims.create({
       key: "idleOgre",
       frames: this.makeAnim("ogre", "Ogre"),
       frameRate: 8,
       repeat: -1,
     });
-
-    this.crab.play("idleCrab");
     this.ogre.play("idleOgre");
 
     // init gridEngine
@@ -124,6 +135,19 @@ export class GameScene extends Phaser.Scene {
     
     this.gridEngine.moveRandomly("crab", Math.floor(Math.random() * 1500) + 1);
     this.gridEngine.moveRandomly("ogre", Math.floor(Math.random() * 1500) + 1);
+
+    // init colliders
+    const crabCollider = this.physics.add.collider(playerSprite, this.crab, () => {
+        console.log("collided with crab");
+        dialogue.setText("collided with crab");
+        this.gridEngine.stopMovement("crab");
+    }, null, this);
+
+    const ogreCollider = this.physics.add.collider(playerSprite, this.ogre, () => {
+        console.log("collided with ogre");
+        dialogue.setText("collided with ogre");
+        this.gridEngine.stopMovement("ogre");
+    }, null, this);
   }
 
   makeAnim(key, frameName) {
