@@ -121,6 +121,9 @@ export class GameScene extends Phaser.Scene {
     };
 
     this.gridEngine.create(mainCityTilemap, gridEngineConfig);
+    
+    this.gridEngine.moveRandomly("crab", Math.floor(Math.random() * 1500) + 1);
+    this.gridEngine.moveRandomly("ogre", Math.floor(Math.random() * 1500) + 1);
   }
 
   makeAnim(key, frameName) {
