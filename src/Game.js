@@ -1,5 +1,4 @@
 import * as Phaser from "phaser";
-import { Player } from "./Player";
 import { GridEngine } from "grid-engine";
 
 const sceneConfig = {
@@ -33,6 +32,12 @@ export class GameScene extends Phaser.Scene {
       "../assets/crab/idle/crabs.json",
       {}
     );
+    this.load.atlas(
+      "ogre",
+      "../assets/ogre/idle/ogres.png",
+      "../assets/ogre/idle/ogres.json",
+      {}
+    );
   }
 
   create() {
@@ -58,24 +63,30 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.setRoundPixels(true);
 
     // init crab
-    this.crab = this.add.sprite(200, 300, "crab");
+    this.crab = this.add.sprite(0, 0, "crab");
     this.crab.setDepth(2);
-    this.crab.setScale(SCALE);
-    var frameNames = this.textures.get("crab").getFrameNames();
+    this.crab.setScale(1.5);
+
+    // init ogre
+    this.ogre = this.add.sprite(0, 0, "ogre");
+    this.ogre.setDepth(2);
+    this.ogre.setScale(3);
 
     this.anims.create({
-      key: "idle",
-      frames: [
-        { key: "crab", frame: "Crab1.png" },
-        { key: "crab", frame: "Crab2.png" },
-        { key: "crab", frame: "Crab3.png" },
-        { key: "crab", frame: "Crab4.png" },
-        { key: "crab", frame: "Crab5.png" },
-      ],
+      key: "idleCrab",
+      frames: this.makeAnim("crab", "Crab"),
       frameRate: 8,
       repeat: -1,
     });
-    this.crab.play("idle");
+    this.anims.create({
+      key: "idleOgre",
+      frames: this.makeAnim("ogre", "Ogre"),
+      frameRate: 8,
+      repeat: -1,
+    });
+
+    this.crab.play("idleCrab");
+    this.ogre.play("idleOgre");
 
     // init gridEngine
     const gridEngineConfig = {
@@ -83,7 +94,7 @@ export class GameScene extends Phaser.Scene {
         {
           id: "player",
           sprite: playerSprite,
-          walkingAnimationMapping: 2,
+          walkingAnimationMapping: 5,
           startPosition: {
             x: 24,
             y: 24,
@@ -97,11 +108,31 @@ export class GameScene extends Phaser.Scene {
             y: 12,
           },
         },
+        {
+          id: "ogre",
+          sprite: this.ogre,
+          startPosition: {
+            x: 12,
+            y: 12,
+          },
+        },
       ],
       collisionTilePropertyName: "hasCollision",
     };
 
     this.gridEngine.create(mainCityTilemap, gridEngineConfig);
+  }
+
+  makeAnim(key, frameName) {
+    let npcArray = [];
+    for (let i = 0; i < 8; i++) {
+      let fn = frameName + i + ".png";
+      npcArray.push({
+        key: key,
+        frame: fn,
+      });
+    }
+    return npcArray;
   }
 
   update() {
