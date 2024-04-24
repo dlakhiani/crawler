@@ -1,4 +1,5 @@
 import * as Phaser from "phaser";
+import { Colors } from "./constants/Colors"
 import { GridEngine } from "grid-engine";
 
 const sceneConfig = {
@@ -67,16 +68,12 @@ export class GameScene extends Phaser.Scene {
     playerSprite.setScale(SCALE);
     this.player = playerSprite;
 
+    // player hpBar
+    const hpBar = this.makeBar(-13, -5, Colors.red);
+    
     // camera follows player
-    // this.cameras.main.startFollow(playerSprite);
-    // this.cameras.main.setRoundPixels(true);
-
-    // player health/text
-    const text = this.add.text(-5, -10, "Player 1");
-    text.setColor("#000000");
-
-    const container = this.add.container(0, 0, [playerSprite, text]);
-    this.cameras.main.startFollow(container, true);
+    const playerHpContainer = this.add.container(0, 0, [playerSprite, hpBar]);
+    this.cameras.main.startFollow(playerHpContainer, true);
     this.cameras.main.setFollowOffset(
       -playerSprite.width,
       -playerSprite.height
@@ -114,7 +111,7 @@ export class GameScene extends Phaser.Scene {
         {
           id: "player",
           sprite: playerSprite,
-          container,
+          container: playerHpContainer,
           walkingAnimationMapping: 5,
           startPosition: {
             x: 24,
@@ -154,6 +151,7 @@ export class GameScene extends Phaser.Scene {
         console.log("collided with crab");
         dialogue.setText("collided with crab");
         this.gridEngine.stopMovement("crab");
+        this.updateBar(hpBar, 50);
       },
       null,
       this
@@ -166,10 +164,35 @@ export class GameScene extends Phaser.Scene {
         console.log("collided with ogre");
         dialogue.setText("collided with ogre");
         this.gridEngine.stopMovement("ogre");
+        this.updateBar(hpBar, 50);
       },
       null,
       this
     );
+  }
+
+  makeBar(x, y, color) {
+    let bar = this.add.graphics({
+        x: x, y: y,
+    });
+    bar.setDefaultStyles({
+        fillStyle: {
+            color: color,
+            alpha: 1,
+        },
+        lineStyle: {
+            width: 2,
+            color: Colors.black,
+            alpha: 1,
+        },
+    })
+    bar.fillRect(x, y, 100, 10);
+    bar.strokeRect(x, y, 100, 10);
+    return bar;
+  }
+
+  updateBar(bar, amount) {
+    bar.scaleX = amount / 100;
   }
 
   makeAnim(key, frameName) {
