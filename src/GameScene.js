@@ -56,12 +56,10 @@ export class GameScene extends Phaser.Scene {
     }
 
     // init dialogue
-    const dialogue = this.add.text(
-        150, 80, "move around", { 
-            fontSize: '32px', 
-            fill: '#000' 
-        }
-    )
+    const dialogue = this.add.text(150, 80, "move around", {
+      fontSize: "32px",
+      fill: "#000",
+    });
 
     // init player
     const playerSprite = this.physics.add.sprite(0, 0, "player");
@@ -70,8 +68,19 @@ export class GameScene extends Phaser.Scene {
     this.player = playerSprite;
 
     // camera follows player
-    this.cameras.main.startFollow(playerSprite);
-    this.cameras.main.setRoundPixels(true);
+    // this.cameras.main.startFollow(playerSprite);
+    // this.cameras.main.setRoundPixels(true);
+
+    // player health/text
+    const text = this.add.text(-5, -10, "Player 1");
+    text.setColor("#000000");
+
+    const container = this.add.container(0, 0, [playerSprite, text]);
+    this.cameras.main.startFollow(container, true);
+    this.cameras.main.setFollowOffset(
+      -playerSprite.width,
+      -playerSprite.height
+    );
 
     // init crab
     this.crab = this.physics.add.sprite(0, 0, "crab");
@@ -85,7 +94,7 @@ export class GameScene extends Phaser.Scene {
       repeat: -1,
     });
     this.crab.play("idleCrab");
-    
+
     // init ogre
     this.ogre = this.physics.add.sprite(0, 0, "ogre");
     this.ogre.setDepth(2);
@@ -105,6 +114,7 @@ export class GameScene extends Phaser.Scene {
         {
           id: "player",
           sprite: playerSprite,
+          container,
           walkingAnimationMapping: 5,
           startPosition: {
             x: 24,
@@ -132,22 +142,34 @@ export class GameScene extends Phaser.Scene {
     };
 
     this.gridEngine.create(mainCityTilemap, gridEngineConfig);
-    
+
     this.gridEngine.moveRandomly("crab", Math.floor(Math.random() * 1500) + 1);
     this.gridEngine.moveRandomly("ogre", Math.floor(Math.random() * 1500) + 1);
 
     // init colliders
-    const crabCollider = this.physics.add.collider(playerSprite, this.crab, () => {
+    const crabCollider = this.physics.add.collider(
+      playerSprite,
+      this.crab,
+      () => {
         console.log("collided with crab");
         dialogue.setText("collided with crab");
         this.gridEngine.stopMovement("crab");
-    }, null, this);
+      },
+      null,
+      this
+    );
 
-    const ogreCollider = this.physics.add.collider(playerSprite, this.ogre, () => {
+    const ogreCollider = this.physics.add.collider(
+      playerSprite,
+      this.ogre,
+      () => {
         console.log("collided with ogre");
         dialogue.setText("collided with ogre");
         this.gridEngine.stopMovement("ogre");
-    }, null, this);
+      },
+      null,
+      this
+    );
   }
 
   makeAnim(key, frameName) {
