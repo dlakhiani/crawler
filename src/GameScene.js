@@ -192,7 +192,9 @@ export class GameScene extends Phaser.Scene {
   }
 
   updateBar(bar, amount) {
-    bar.scaleX = amount / 100;
+    bar.clear();
+    bar.fillRect(bar.x, bar.y, amount, 10);
+    bar.strokeRect(bar.x, bar.y, 100, 10);
   }
 
   makeAnim(key, frameName) {
